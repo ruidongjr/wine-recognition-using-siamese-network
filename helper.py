@@ -48,16 +48,15 @@ def get_image_from_filename(img_filename):
 
 
 #%% function: get_data()
-def get_data(data_path, size=2, total_sample_size=10000):
+def get_data(data_path, dim=(100, 150), total_sample_size=10000):
     sub_paths = os.listdir(data_path)
     filename = os.listdir(os.path.join(data_path, sub_paths[0]))[0]
     
     # read the image
     image = read_image(os.path.join(data_path, sub_paths[0], filename))
-    
     # reduce the size
-    image = image[::size, ::size]
-    
+    image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+
     # get the new size
     dim1 = image.shape[0]
     dim2 = image.shape[1]
@@ -84,10 +83,10 @@ def get_data(data_path, size=2, total_sample_size=10000):
             # read the two images
             img1 = read_image(os.path.join(cur_path, filelist[ind1]))
             img2 = read_image(os.path.join(cur_path, filelist[ind2]))
-            
+
             # reduce the size
-            img1 = img1[::size, ::size]
-            img2 = img2[::size, ::size]
+            img1 = cv2.resize(img1, dim, interpolation=cv2.INTER_AREA)
+            img2 = cv2.resize(img2, dim, interpolation=cv2.INTER_AREA)
             
             # store the images to the initialized numpy array
             x_similar_pair[count, 0, 0, :, :] = img1
@@ -128,9 +127,10 @@ def get_data(data_path, size=2, total_sample_size=10000):
             
             img1 = read_image(os.path.join(data_path, pathlist[ind1_1], flist1[ind2_1]))
             img2 = read_image(os.path.join(data_path, pathlist[ind1_2], flist2[ind2_2]))
-            
-            img1 = img1[::size, ::size]
-            img2 = img2[::size, ::size]
+
+            # reduce the size
+            img1 = cv2.resize(img1, dim, interpolation=cv2.INTER_AREA)
+            img2 = cv2.resize(img2, dim, interpolation=cv2.INTER_AREA)
             
             x_dissimilar_pair[count, 0, 0, :, :] = img1
             x_dissimilar_pair[count, 1, 0, :, :] = img2
